@@ -1,4 +1,5 @@
 version: '2'
+
 services:
   elasticsearch:
     image: elasticsearch:latest
@@ -8,21 +9,21 @@ services:
       - "9300:9300"
     networks:
       - log_net
+
   logstash:
-    image: logstash:latest
-    command: logstash -f /etc/logstash/conf.d/logstash.conf
-    volumes:
-      - ./logstash/config:/etc/logstash/conf.d
+    build: logstash
     ports:
       - "5000:5000"
     networks:
       - log_net
+
   kibana:
-    build: kibana/
-    volumes:
-      - ./kibana/config/:/opt/kibana/config/
+    build: kibana
     ports:
       - "5601:5601"
+    depends_on:
+      - elasticsearch
+      - logstash
     networks:
       - log_net
 
