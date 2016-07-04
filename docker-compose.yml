@@ -24,6 +24,15 @@ services:
     networks:
       - log_net
 
+  frontend:
+    build: nginx
+    ports:
+      - 80:80
+    depends_on:
+      - kibana
+    networks:
+      - log_net
+
 networks:
   log_net:
     driver: bridge
