@@ -40,7 +40,7 @@ And then access Kibana UI over nginx proxy with basic auth by hitting [http://lo
 
 You can also access:
 
-* Sense: [http://localhost:5601/app/sense](http://localhost:5601/app/sense)
+* Sense: [http://localhost/app/sense](http://localhost:5601/app/sense)
 
 *Note*: In order to use Sense, you'll need to query the IP address associated to your *network device* instead of localhost.
 
