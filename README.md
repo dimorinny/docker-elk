@@ -11,6 +11,7 @@ Based on the official images:
 * [elasticsearch](https://registry.hub.docker.com/_/elasticsearch/)
 * [logstash](https://registry.hub.docker.com/_/logstash/)
 * [kibana](https://registry.hub.docker.com/_/kibana/)
+* [nginx](https://hub.docker.com/_/nginx/)
 
 # Requirements
 
@@ -19,16 +20,6 @@ Based on the official images:
 1. Install [Docker](http://docker.io).
 2. Install [Docker-compose](http://docs.docker.com/compose/install/).
 3. Clone this repository
-
-## SELinux
-
-On distributions which have SELinux enabled out-of-the-box you will need to either re-context the files or set SELinux into Permissive mode in order for docker-elk to start properly.
-For example on Redhat and CentOS, the following will apply the proper context:
-
-````bash
-.-root@centos ~
--$ chcon -R system_u:object_r:admin_home_t:s0 fig-elk/
-````
 
 # Usage
 
@@ -44,24 +35,19 @@ You can also choose to run it in background (detached mode):
 $ docker-compose up -d
 ```
 
-Now that the stack is running, you'll want to inject logs in it. The shipped logstash configuration allows you to send content via tcp:
-
-```bash
-$ nc localhost 5000 < /path/to/logfile.log
-```
-
-And then access Kibana UI by hitting [http://localhost:5601](http://localhost:5601) with a web browser.
+And then access Kibana UI over nginx proxy with basic auth by hitting [http://localhost/](http://localhost/) with a web browser. Default credentials:
+`dimorinny:password`.
 
 You can also access:
+
 * Sense: [http://localhost:5601/app/sense](http://localhost:5601/app/sense)
 
 *Note*: In order to use Sense, you'll need to query the IP address associated to your *network device* instead of localhost.
 
 By default, the stack exposes the following ports:
+
 * 5000: Logstash TCP input.
-* 9200: Elasticsearch HTTP
-* 9300: Elasticsearch TCP transport
-* 5601: Kibana
+* 80: Nginx
 
 *WARNING*: If you're using *boot2docker*, you must access it via the *boot2docker* IP address instead of *localhost*.
 
@@ -70,6 +56,12 @@ By default, the stack exposes the following ports:
 # Configuration
 
 *NOTE*: Configuration is not dynamically reloaded, you will need to restart the stack after any change in the configuration of a component.
+
+## How can I tune proxy configuration?
+
+By default to access Kibana you should use nginx proxy with basic auth. Nginx take login and password from `nginx/config/.htpasswd`. Default credentials: `dimorinny:password`. You can create your own login and password using `htpasswd -nd <username>` command.
+
+Also for another nginx configuration your should fix nginx configuration. It is stored in `nginx/config/nginx.conf`.
 
 ## How can I tune Kibana configuration?
 
